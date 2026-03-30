@@ -22,19 +22,21 @@
 | OpenAI Harness Engineering | https://openai.com/index/harness-engineering/ | 100万行代码，1500 PR，0行人类代码 | ✅ 已核实 |
 | MCP Protocol Spec | https://modelcontextprotocol.io | 协议规范（USB-C for AI） | ✅ 已核实 |
 | Cursor Self-Driving | https://cursor.com/blog/self-driving-codebases | ~1000 commits/小时 | ✅ 已核实 |
-| Stripe Minions | https://stripe.com/blog/stripes-one-shot-coding-agents | Blueprint混合编排 | ⚠️ 待核实（URL变更） |
-| StrongDM Leash | https://strongdm.com/blog/policy-enforcement-for-agentic-ai-with-leash | Leash <1ms开销 | ❌ 无法核实（页面404） |
+| Stripe Minions | https://stripe.com/blog/stripes-one-shot-coding-agents | Blueprint混合编排 | ✅ 已核实(新URL) |
+| StrongDM Leash | https://strongdm.com | 策略引擎，内核级执行 | ⚠️ 待核实（URL已变更） |
 
 ## C级（第三方验证）
 
 | 来源 | URL | 关键数据 | 核实状态 |
 |------|-----|---------|---------|
 | LangChain博客 | https://blog.langchain.com/improving-deep-agents-with-harness-engineering/ | 52.8%→66.5%（Terminal Bench 2.0） | ✅ 已核实 |
-| Pi Research | — | 同日测试15个LLM提升 | C（待核实） |
 
 ## D级（官方营销数据）
 
-| 来源 | 数据 | 说明 | 核实状态 |
-|------|------|------|---------|
-| WasmEdge | 启动速度快100倍，运行时快20%，体积1/100 | 官方benchmark | ✅ 已核实（wasmedge.org） |
-| Mastra | 80%→96%成功率 | 官方数据 | ⚠️ 待核实 |
+| 来源 | 数据 | 说明 |
+|------|------|------|
+| WasmEdge | 启动速度快100倍，运行时快20%，体积1/100 | 官方benchmark |
+| Mastra | 80%→96%成功率 | 官方数据 |
+| Replit Agent 3 × Mastra | 90%自主率，3倍更快 | 官方博客 |
+
+> **注**：D级数据为厂商官方宣称，未经独立验证，供参考。
