@@ -901,7 +901,7 @@ let data = match fetch_data() {
 
 5. **SafeTrans: C to Rust with Iterative Fixing (arXiv:2505.10708)** — 翻译成功率54%→80%，证明Rust作为跨语言类型安全底座的可行性，来源：arXiv:2505.10708
 
-### 辅助来源
+### 二手来源
 
 6. **VERT: Verified Equivalent Rust Transpilation (arXiv:2404.18852)** — WASM编译器生成oracle Rust程序作为参考，验证LLM生成的代码，来源：arXiv:2404.18852
 

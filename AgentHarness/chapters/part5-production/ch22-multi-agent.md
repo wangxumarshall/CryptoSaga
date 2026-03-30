@@ -2590,6 +2590,16 @@ func generateTaskID() string {
 
 ---
 
+## 桥接语
+
+- **承上：** 第二十一章设计了永不崩溃的Boot Sequence——RAG-MCP的fallback策略、Schema的版本化验证、超时后的优雅降级。这一章在此基础上解决了一个更根本的问题：当多个Agent协作时，谁对最终状态负责？这是从单一Agent到多Agent联邦的关键跨越。
+
+- **启下：** 从第一章的"LangChain是建筑工程"到第二十二章的"多Agent责任链"，本书建立了Harness工程学的完整框架：从第一性原理（Bounded Intelligence）到语言层契约（TypeScript/Rust类型系统）到编译器层（TNR、自愈循环、死循环检测）到运行时层（WASM隔离、WASI能力、V8 Isolates）再到生产部署层（最小栈、Boot Sequence、多Agent协作）。所有这些层次共同构成了一个不可能出错的系统。
+
+- **认知缺口：** 你可能已经在用单一Agent，觉得多Agent协作太复杂。但从Stripe Minions每周1300+ PR的规模来看，多Agent是规模化AI编程的必然方向。而多Agent协作的真正挑战不是技术，而是accountability——谁对最终状态负责。当这个问题的答案不清晰时，任何多Agent系统都不可信赖。
+
+---
+
 ## Step 7: 本章来源
 
 ### 一手来源

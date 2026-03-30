@@ -1176,7 +1176,7 @@ impl Default for OdysseyStateMachine {
 
 6. **SafeTrans (arXiv:2505.10708)** — C到Rust迭代修复，成功率54%→80%，证明Rust作为跨语言类型安全底座的可行性，来源：arXiv:2505.10708
 
-### 辅助来源
+### 二手来源
 
 7. **VERT: Verified Equivalent Rust Transpilation (arXiv:2404.18852)** — WASM编译器生成oracle Rust程序作为参考，验证LLM生成的代码，来源：arXiv:2404.18852
 
