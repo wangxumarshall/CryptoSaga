@@ -10,28 +10,39 @@
 
 ### 1.1 总览：24个系统的技术分类图谱
 
-当前 Agent Memory 领域呈现**三极分化**格局：
+当前 Agent Memory 领域呈现**七大范式分化**格局：
 
 ```
-                    ┌─────────────────────────────┐
-                    │   模型原生记忆 (Model-Native) │
-                    │   Memorizing Transformers    │
-                    │   MemoryLLM / Infini-attn    │
-                    │   RMT / LongMem / LM2        │
-                    └──────────┬──────────────────┘
-                               │
-            ┌──────────────────┼──────────────────┐
-            │                  │                  │
-    ┌───────▼──────┐  ┌───────▼──────┐  ┌───────▼──────┐
-    │  RAG外挂检索  │  │  OS内存页置换  │  │  混合/新兴范式 │
-    │  mem0/mem9   │  │  Letta/MemOS │  │  文件系统范式  │
-    │  langmem     │  │  EverMemOS   │  │  OpenViking   │
-    │  ContextLoom │  │  MindOS      │  │  memsearch    │
-    │  eion        │  │  Ori-Mnemos  │  │  memU/Hermes  │
-    └──────────────┘  └──────────────┘  └──────────────┘
+                         ┌─────────────────────────────┐ 
+                         │   模型原生记忆 (Model-Native) │ 
+                         │   Memorizing Transformers    │ 
+                         │   MemoryLLM / Infini-attn   │ 
+                         └──────────┬──────────────────┘ 
+                                    │
+     ┌──────────────────────────────┼──────────────────────────────┐
+     │                              │                              │
+┌────▼────────────────┐ ┌──────────▼──────────────────┐ ┌─────────▼─────────────────┐
+│  LLM决策记忆系统      │ │   分层记忆管理系统           │ │  外部记忆增强系统          │
+│  (LLM-Decided Mem)   │ │  (Layered Memory Mgmt)     │ │  (External Memory Aug)   │
+│                      │ │                            │ │                          │
+│  mem0: LLM决策机    │ │  Letta: 主动上下文外部化    │ │  OpenViking: viking://  │
+│  mem9: 记忆调和     │ │  MemOS: 统一API调度        │ │  memsearch: Markdown    │
+│  Hermes: 技能生成    │ │  EverMemOS: 生物启发调度   │ │  memU: 文件系统+主动    │
+└─────────────────────┘ └─────────────────────────────┘ └───────────────────────────┘
+                                    │
+     ┌──────────────────────────────┼──────────────────────────────┐
+     │                              │                              │
+┌────▼────────────────┐ ┌──────────▼──────────────────┐ ┌─────────▼─────────────────┐
+│  程序性/技能记忆     │ │   多Agent共享记忆           │ │  上下文基础设施           │
+│  (Procedural Mem)   │ │  (Multi-Agent Shared)     │ │  (Context Infrastructure)│
+│                      │ │                            │ │                          │
+│  Acontext: 技能蒸馏  │ │  ContextLoom: Redis总线   │ │  langmem: LangGraph存储 │
+│  Voyager: 可执行代码 │ │  eion: PG+Neo4j统一API    │ │  claude-mem: 生命周期钩 │
+│  xiaoclaw: 零成本   │ │  honcho: 对等体推理       │ │  ultraContext: 实时共享  │
+└─────────────────────┘ └────────────────────────────┘ └────────────────────────────┘
 ```
 
-**核心发现**：RAG外挂检索仍是主流（占60%+），但OS范式和文件系统范式正在快速崛起，代表了从"被动存储"到"主动管理"的范式跃迁。
+**核心发现**：经源码级验证，原"OS内存页置换"分类是**营销隐喻而非技术实现**——没有任何系统真正实现硬件级页置换机制。修正后的分类更准确反映各系统的实际技术架构。
 
 **⚠️ 数据可信度警示**：本章引用的性能数据（Token节省率、准确率提升等）绝大多数为各项目**自报数据**，缺乏统一基准和独立第三方验证。横向比较时需格外谨慎。详见1.3.3节"评估可信度危机"。
 
@@ -43,20 +54,23 @@
 
 ##### 技术分类 (Tech Taxonomy)
 
+**⚠️ 分类修正说明**：经源码级深度调研，原"OS内存页置换"分类是营销隐喻。没有任何系统真正实现硬件级页置换——Letta是LLM主动的上下文外部化，MemOS是统一API调度，EverMemOS是生物启发自组织系统。本表基于实际代码架构进行了修正。
+
 | 分类 | 代表系统 | 核心特征 | 适用场景 |
 |------|---------|---------|---------|
-| **RAG外挂检索** | mem0, mem9, langmem, ContextLoom, eion, claude-mem | 向量语义检索+上下文注入，不修改模型 | 通用Agent、快速集成 |
-| **OS内存页置换** | Letta(memGPT), MemOS, EverMemOS, MindOS, Ori-Mnemos | 借鉴OS虚拟内存管理，分层调度 | 长时程推理、24/7 Agent |
-| **文件系统范式** | OpenViking, memsearch, memU, Hermes Agent | 以文件/目录组织记忆，人类可读可编辑 | 编码Agent、需要可观测性 |
-| **模型原生记忆** | Memorizing Transformers, MemoryLLM | 修改Transformer注意力或模型参数 | 长文档理解、低延迟场景 |
-| **认知建模** | honcho, MemaryAI | 模拟人类记忆架构（工作/情景/语义） | 个性化陪伴、C端应用 |
-| **技能即记忆** | Acontext, Voyager | 将可执行技能作为记忆存储 | 技能密集型Agent |
+| **模型原生记忆** | Memorizing Transformers, MemoryLLM, Infini-attention | 修改Transformer注意力或模型参数 | 长文档理解、低延迟场景 |
+| **LLM决策记忆** | mem0, mem9, Hermes Agent | LLM作为"记忆决策机"，提取/更新/遗忘四选一 | 通用Agent、需要智能记忆管理 |
+| **分层记忆管理** | Letta, MemOS, EverMemOS | 多层架构+软件调度器，非硬件页置换 | 长时程推理、24/7 Agent |
+| **外部记忆增强** | OpenViking, memsearch, memU, xiaoclaw-memory, lossless-claw | 人类可读格式为核心，机器检索为增强 | 编码Agent、需要可观测性 |
+| **程序性/技能记忆** | Acontext, Voyager | 可执行代码/技能作为记忆，直接"执行" | 技能密集型Agent |
+| **多Agent共享记忆** | ContextLoom, eion, honcho | 共享记忆总线+隔离机制 | 多Agent协作 |
+| **上下文基础设施** | langmem, claude-mem, ultraContext | 作为框架/平台的基础组件 | 快速集成、框架嵌入 |
 
 **关键洞察**：
-- RAG外挂检索的"天花板"在于检索与生成的割裂——检索不知道生成需要什么，生成无法指导检索优化
-- OS范式的核心价值在于"统一调度"——将记忆从被动资源变为主动管理的OS级资源
-- 文件系统范式的独特优势在于"人类可读性"——这是工程可观测性的基础
-- 模型原生记忆的"根本性限制"在于容量有限、不可解释、不可迁移
+- LLM决策记忆的核心创新是"记忆决策机"——不只是检索，而是LLM决定如何处理每条记忆
+- 分层记忆管理的核心价值是"统一调度"——但由软件调度器而非硬件机制驱动
+- 外部记忆增强的独特优势是"人类可读性"——这是工程可观测性的基础
+- 模型原生记忆的根本限制在于容量有限、不可解释、不可迁移
 
 ##### 存储范式 (Storage Paradigm)
 
@@ -66,14 +80,16 @@
 | **会话时序 (Time-Series)** | Letta(Recall), lossless-claw | 时序推理、完整历史 | 检索效率低、token开销大 |
 | **图数据库 (GraphDB)** | MemOS, eion, mindforge | 结构化推理、关系建模 | 部署复杂、维护成本高 |
 | **超图 (Hypergraph)** | EverMemOS/HyperMem | n-元关系表达、高阶推理 | 计算开销大、生态不成熟 |
-| **文件目录树 (File System)** | OpenViking, memsearch, memU | 人类可读、git版本控制 | 语义检索需额外索引 |
+| **文件目录树 (File System)** | OpenViking, memsearch, memU, xiaoclaw-memory | 人类可读、git版本控制 | 语义检索需额外索引 |
 | **模型参数 (Parameters)** | MemoryLLM | 零检索延迟、知识内化 | 容量有限、不可解释 |
-| **KV Cache** | Memorizing Transformers | 注意力级融合、端到端优化 | 存储开销大、缺乏遗忘 |
+| **KV Cache** | Memorizing Transformers, Infini-attention | 注意力级融合、端到端优化 | 存储开销大、缺乏遗忘 |
+| **DAG摘要** | lossless-claw | 层级压缩、原文可恢复 | 结构复杂、检索需多跳 |
+| **对等体模型** | honcho | 实体深度理解、推理增强 | 推理成本高、延迟大 |
 
 **融合趋势**：单一存储范式已无法满足复杂Agent需求。主流方向是**混合存储**：
-- **向量 + 图**（MemOS, mindforge）：语义检索 + 结构化推理
+- **向量 + 图**（MemOS, mindforge, eion）：语义检索 + 结构化推理
 - **文件系统 + 向量影子**（memsearch, OpenViking）：人类可读 + 机器可检索
-- **分层存储**（Letta: Core/Archival/Recall）：不同粒度不同存储
+- **分层存储**（Letta: Core/Archival/Recall；MemOS: Parametric/Activation/Plaintext）：不同粒度不同存储
 
 ##### 系统定位 (System Positioning)
 
@@ -117,16 +133,17 @@
 死记忆 ◄──────────────────────────────────────────► 活记忆
 
 mem9    memsearch   mem0     Letta    memU    Hermes   EverMemOS  A-MEM
-lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
+lossless  ContextLoom  langmem  OpenViking  xiaoclaw   MemOS    honcho
+ultraContext  eion   claude-mem
 ```
 
 | 进化等级 | 特征 | 代表系统 |
 |---------|------|---------|
-| **L0 死记忆** | 只存不更新，无反思/融合/遗忘 | mem9, lossless-claw, ContextLoom |
+| **L0 死记忆** | 只存不更新，无反思/融合/遗忘 | mem9, lossless-claw, ContextLoom, ultraContext, eion |
 | **L1 半活记忆** | 自动提取+去重，但无主动进化 | mem0, memsearch, langmem, claude-mem |
-| **L2 活记忆(规则驱动)** | 反思+融合+有限遗忘，规则驱动 | Letta, OpenViking, memU, Ori-Mnemos |
-| **L3 活记忆(自组织)** | 自主反思+融合+遗忘，调度器驱动 | MemOS, EverMemOS, Hermes Agent |
-| **L4 活记忆(Agent化)** | 记忆本身是Agent，具备自主行动能力 | A-MEM, MindOS |
+| **L2 活记忆(规则驱动)** | 反思+融合+有限遗忘，规则驱动 | Letta, OpenViking, memU, xiaoclaw-memory, Acontext |
+| **L3 活记忆(自组织)** | 自主反思+融合+遗忘，调度器驱动 | MemOS, EverMemOS, Hermes Agent, honcho |
+| **L4 活记忆(Agent化)** | 记忆本身是Agent，具备自主行动能力 | A-MEM |
 
 **关键洞察**：
 - 当前大多数系统（60%+）仍停留在L0-L1级别，记忆是"死"的
@@ -140,12 +157,14 @@ lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
 
 | 遗忘策略 | 代表系统 | 优势 | 劣势 |
 |---------|---------|------|------|
-| **无遗忘** | mem0, memsearch, Letta, langmem | 简单、无信息丢失 | 记忆膨胀、检索噪声 |
+| **无遗忘** | mem0, memsearch, Letta, langmem, lossless-claw, ultraContext, Acontext, Voyager | 简单、无信息丢失 | 记忆膨胀、检索噪声 |
 | **手动删除** | mem0(delete API), Letta | 人类可控 | 依赖人工、不可扩展 |
 | **TTL过期** | 部分系统支持 | 简单有效 | 无法区分重要/不重要 |
-| **重要性评分淘汰** | EverMemOS, MemOS, Ori-Mnemos | 智能化、保留高价值记忆 | 评分依赖LLM、成本高 |
-| **遗忘曲线** | MemoryBank | 心理学基础、自然衰减 | 参数需调优 |
-| **隐式淘汰** | memU(低频沉底) | 零成本 | 不精确 |
+| **重要性评分淘汰** | EverMemOS, MemOS | 智能化、保留高价值记忆 | 评分依赖LLM、成本高 |
+| **遗忘曲线** | MemoryBank, MemaryAI | 心理学基础，自然衰减 | 参数需调优 |
+| **隐式淘汰(低频沉底)** | memU, xiaoclaw-memory | 零成本 | 不精确 |
+| **记忆调和(冲突解决)** | mem9 | 主动解决冲突，保持一致性 | 依赖LLM判断 |
+| **DAG层级压缩** | lossless-claw | 原文永不丢失，可按需展开 | 检索需多跳遍历 |
 
 **关键洞察**：遗忘机制是区分"死记忆"和"活记忆"的分水岭。没有遗忘能力的记忆系统在长期运行后必然面临检索质量下降的问题。EverMemOS的EverCore调度器代表了当前最完善的遗忘实现。
 
@@ -230,11 +249,12 @@ lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
 |------|---------|------|
 | **C端闲聊陪伴** | honcho, MemoryBank | 用户心智建模 + 遗忘曲线 |
 | **编码Agent** | memsearch, OpenViking, claude-mem | 人类可读 + git + 渐进披露 |
-| **24/7主动Agent** | memU, Hermes Agent | 主动式记忆 + 低成本 |
-| **B端复杂运维** | MemOS, EverMemOS | 图结构推理 + OS级调度 |
-| **多Agent仿真** | ContextLoom, eion, MindOS | 共享记忆 + 隔离机制 |
+| **24/7主动Agent** | memU, Hermes Agent, xiaoclaw-memory | 主动式记忆 + 低成本 |
+| **B端复杂运维** | MemOS, EverMemOS | 图结构推理 + 分层调度 |
+| **多Agent仿真** | ContextLoom, eion, honcho | 共享记忆 + 隔离机制 |
 | **长时程推理** | EverMemOS, Letta | 自组织 + 虚拟上下文 |
 | **快速集成** | mem0, langmem | 一行SDK + 广泛生态 |
+| **技能密集型Agent** | Voyager, Acontext | 可执行代码技能库 |
 
 **⚠️ 批判性注释**：上述"最佳系统"推荐基于各系统的功能声明和设计理念匹配度，而非在相同条件下的实验对比。实际效果可能因具体任务、模型选择、配置参数等因素而有显著差异。
 
@@ -266,10 +286,10 @@ lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
 
 | 局限维度 | 影响范围 | 严重度 | 说明 |
 |---------|---------|--------|------|
-| **遗忘机制缺失** | 60%+系统 | 高 | 记忆只增不减，长期运行后检索质量下降 |
+| **遗忘机制缺失** | 60%+系统(L0级别) | 高 | 记忆只增不减，长期运行后检索质量下降 |
 | **结构化推理弱** | 70%+系统 | 高 | 无法处理复杂实体关系，仅扁平事实 |
 | **LLM依赖** | 80%+系统 | 中 | 记忆提取/分类/反思均需LLM调用，成本高 |
-| **部署复杂度** | 图/OS类系统 | 中 | Neo4j/Redis/Milvus等外部组件增加运维成本 |
+| **部署复杂度** | 分层记忆管理系统 | 中 | Neo4j/Redis/Milvus等外部组件增加运维成本 |
 | **评估不统一** | 全部系统 | 高 | 缺乏统一基准，各系统自报数据不可比 |
 | **多Agent协作弱** | 70%+系统 | 中 | 缺乏成熟的共享记忆协议和一致性机制 |
 | **安全与隐私缺失** | 几乎全部系统 | 高 | 记忆投毒攻击成功率85%+，防御机制几乎为零（详见1.3.3节） |
@@ -278,10 +298,13 @@ lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
 
 | 范式 | 特有局限 |
 |------|---------|
-| **RAG外挂** | 检索与生成分割；检索黑箱；无法端到端优化 |
-| **OS范式** | 系统复杂度高；调度策略需精心设计；调试困难 |
-| **文件系统** | 语义检索需额外索引；大规模记忆下性能下降 |
 | **模型原生** | 容量有限；不可解释；不可迁移；灾难性遗忘风险 |
+| **LLM决策记忆** | LLM决策成本高；决策质量依赖LLM能力；延迟增加 |
+| **分层记忆管理** | 系统复杂度高；调度策略需精心设计；调试困难 |
+| **外部记忆增强** | 语义检索需额外索引；大规模记忆下性能下降；人类可读格式的检索效率有限 |
+| **程序性/技能记忆** | 技能抽取和表示依赖LLM；技能冲突和覆盖问题；跨任务迁移困难 |
+| **多Agent共享记忆** | 一致性协议复杂；共享记忆的隔离和安全问题；中心化单点风险 |
+| **上下文基础设施** | 与框架深度绑定；迁移成本高；功能受限于框架能力 |
 
 #### 1.3.3 评估可信度危机与安全盲区
 
@@ -315,7 +338,7 @@ lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
 
 ```
 1. 静态 → 动态
-   死记忆(只存不更新) → 半活(自动提取) → 活记忆(反思+融合+遗忘) → 自组织(A-MEM)
+   死记忆(L0) → 半活(L1自动提取) → 活记忆(L2反思+融合+遗忘) → 自组织(L3调度器) → Agent化(L4记忆即Agent)
 
 2. 被动 → 主动
    被动检索(查询时才返回) → 主动预取(预测需求预加载) → 主动推送(自动注入相关记忆)
@@ -324,10 +347,10 @@ lossless  ContextLoom  langmem  OpenViking  Ori-Mnemos  MemOS    MindOS
    扁平向量 → 分类标签 → 知识图谱 → 超图 → 认知图谱
 
 4. 外挂 → 内嵌
-   RAG外挂检索 → 注意力内嵌记忆(Infini-attention) → 参数级记忆(MemoryLLM)
+   外部记忆增强 → 分层记忆管理 → 模型原生记忆(Infini-attention/MemoryLLM)
 
 5. 单体 → 集体
-   单Agent独立记忆 → 多Agent隔离 → 共享记忆 → 集体意识总线
+   单Agent独立记忆 → 多Agent隔离 → 共享记忆总线 → 集体意识总线
 
 6. RAG → MAG（候补范式）
    检索增强生成 → 记忆增强生成(记忆深度参与生成过程)
@@ -347,7 +370,7 @@ MAG（Memory-Augmented Generation）目前**不是一个被正式定义的学术
    - 中期：memsearch + OpenViking组合
    - 长期：Markdown目录映射到viking://，三合一
 
-2. **图/超图 + OS调度融合**（EverMemOS验证）：
+2. **超图 + 分层调度融合**（EverMemOS验证）：
    - HyperMem超图存储 + EverCore调度器
    - 结构化推理 + 智能遗忘 + 自组织
 
@@ -817,13 +840,13 @@ L1 技能条目（蒸馏后）:
 
 | 差异化维度 | CortexMem | 最接近竞品 | 核心差异 | 风险/挑战 |
 |-----------|-----------|-----------|---------|----------|
-| **三层记忆统一** | L0感知+L1工作+L2认知 | Letta(两层) | 增加感知层KV管理 | L0与L1/L2的跨层接口设计复杂 |
-| **超图+向量双索引** | 结构化推理+语义检索 | MemOS(图+向量) | 超图超越简单图，支持n-元关系 | 超图构建成本高，EverMemOS数据待独立验证 |
-| **User as Code** | 可执行用户偏好 | honcho(认知建模) | 从"理解用户"到"执行用户规则" | 代码注入安全风险，维护成本 |
-| **零成本蒸馏** | Agent自分类+Markdown蒸馏 | xiaoclaw-memory | 增加超图和调度器层 | 自分类准确性依赖Agent能力 |
-| **遗忘曲线+重要性** | 心理学基础+智能评分 | EverMemOS(EverCore) | 增加自适应衰减率 | 评分依赖LLM，成本和延迟 |
-| **多Agent记忆总线** | 私有+共享+元记忆 | eion(Namespace) | 增加元记忆(Agent能力图谱) | 一致性协议设计复杂 |
-| **Markdown-first** | 人类可读为源头真相 | memsearch | 增加超图和可执行层 | Markdown与超图的映射维护成本 |
+| **三层记忆统一** | L0感知+L1工作+L2认知 | 分层记忆管理(Letta仅两层) | 增加感知层KV管理 | L0与L1/L2的跨层接口设计复杂 |
+| **超图+向量双索引** | 结构化推理+语义检索 | 分层记忆管理(MemOS仅图+向量) | 超图超越简单图，支持n-元关系 | 超图构建成本高，EverMemOS数据待独立验证 |
+| **User as Code** | 可执行用户偏好 | 多Agent共享记忆(honcho认知建模) | 从"理解用户"到"执行用户规则" | 代码注入安全风险，维护成本 |
+| **零成本蒸馏** | Agent自分类+Markdown蒸馏 | 外部记忆增强(xiaoclaw-memory) | 增加超图和调度器层 | 自分类准确性依赖Agent能力 |
+| **遗忘曲线+重要性** | 心理学基础+智能评分 | 分层记忆管理(EverMemOS EverCore) | 增加自适应衰减率 | 评分依赖LLM，成本和延迟 |
+| **多Agent记忆总线** | 私有+共享+元记忆 | 多Agent共享记忆(eion Namespace) | 增加元记忆(Agent能力图谱) | 一致性协议设计复杂 |
+| **Markdown-first** | 人类可读为源头真相 | 外部记忆增强(memsearch) | 增加超图和可执行层 | Markdown与超图的映射维护成本 |
 | **安全内生设计** | 防火墙+溯源+沙箱 | 无竞品 | 首个将安全作为一等公民的记忆系统 | 安全机制的性能开销 |
 
 ### 3.5 测评标准 Benchmark
@@ -895,34 +918,40 @@ L1 技能条目（蒸馏后）:
 
 ### A. 24个产业界系统C.A.P.E全景对比表
 
+**⚠️ 分类修正说明**：经源码级深度调研，原"OS内存页置换"分类是营销隐喻。修正为"分层记忆管理"；原"RAG外挂检索"细分为LLM决策记忆、多Agent共享记忆、上下文基础设施；新增"程序性/技能记忆"独立分类。
+
 | 系统 | 技术分类 | 存储范式 | 系统定位 | 自我进化 | 遗忘 | 结构化推理 | Token效率 | 可观测性 | 多Agent | 开源许可 |
 |------|---------|---------|---------|---------|------|-----------|----------|---------|---------|---------|
-| OpenViking | RAG+文件系统 | 文件树+向量 | MaaS | 活(L2) | 隐式 | 目录层次 | 83-91%☆ | URI可寻址 | 多租户 | AGPL-3.0 |
-| memsearch | RAG | Markdown+向量影子 | CLI插件 | 半活(L1) | 无 | 分类标签 | 显著 | 人类可读 | 共享 | Apache推测 |
-| Hermes Agent | RAG+文件系统 | Markdown+FTS5 | Agent框架 | 活(L3) | 无 | 分类标签 | 中等 | 人类可读 | 单Agent | Apache推测 |
-| Letta(memGPT) | OS内存管理 | 分层存储 | Agent平台 | 活(L2) | 手动 | 扁平 | 中等 | API可查 | 隔离 | Apache 2.0 |
-| mem0 | RAG | 扁平向量+图 | SDK+MaaS | 半活(L1) | 手动 | 扁平/图 | ~90%☆ | API可查 | 跨Agent共享 | Apache 2.0 |
-| MemOS | OS+图 | 图+向量 | Memory OS | 活(L3) | 调度器 | 图遍历 | 72%☆ | 可视化面板 | 隔离+共享 | Apache推测 |
-| EverMemOS | OS+超图 | 超图+向量 | Memory OS | 活(L3) | EverCore | 超图多跳 | 60-80%预估☆ | 超图可视化 | 共享+分区 | 待确认 |
-| claude-mem | RAG | 文件目录树 | 插件 | 半活(L1) | 无 | 扁平 | 智能压缩 | 人类可读 | 单Agent | MIT |
-| mem9 | RAG | 向量+时序 | 插件 | 半活(L1) | 无 | 扁平 | 按需检索 | 日志 | 单Agent | MIT推测 |
-| lossless-claw | RAG(无损) | 时序+文件树 | 插件 | 死(L0) | 无 | 时序 | 渐进披露 | 人类可读 | 单Agent | 待确认 |
-| memU | RAG+OS | 文件目录树 | 插件+服务 | 活(L2) | 隐式 | 标签+符号链接 | 1/10成本☆ | 人类可读 | 多Agent协作 | 待确认 |
-| Ori-Mnemos | OS+RAG | 文件树+向量 | MaaS | 活(L2) | 重要性 | 层次结构 | 递归压缩 | 可视化 | 单Agent | 待确认 |
-| langmem | RAG | 向量+时序 | SDK | 半活(L1) | 手动 | 命名空间 | 按需检索 | LangGraph | 多Agent隔离 | MIT |
-| honcho | RAG+认知 | 向量+关系型 | MaaS | 活(L3) | 重要性 | 认知图谱 | 个性化路由 | Thought可追溯 | 多Agent共享 | 待确认 |
-| ContextLoom | RAG | Redis+时序 | 中间件 | 死(L0) | 无 | 无 | 无优化 | 日志 | 共享记忆 | 待确认 |
-| eion | RAG | 图+向量 | MaaS | 死(L0) | 无 | 图遍历 | 无优化 | 图可视化 | 隔离+共享 | 待确认 |
-| mindforge | 混合 | 向量+概念图 | Python库 | 部分L2 | 无 | 概念图 | 多层分流 | 概念图可视化 | 单Agent | 待确认 |
-| MineContext | 主动RAG | 文件树+向量 | 插件 | 主动预取 | 无 | 目录浏览 | 主动预加载 | 目录浏览 | 单Agent | 待确认 |
+| OpenViking | 外部记忆增强 | 虚拟文件+向量 | MaaS | L2活 | 隐式 | 目录层次 | 83-91%☆ | URI可寻址 | 多租户 | AGPL-3.0 |
+| memsearch | 外部记忆增强 | Markdown+向量影子 | CLI插件 | L1半活 | 无 | 分类标签 | 显著 | 人类可读 | 共享 | MIT |
+| Hermes Agent | LLM决策记忆 | Markdown+FTS5 | Agent框架 | L3活 | 无 | 分类标签 | 中等 | 人类可读 | 单Agent | MIT |
+| Letta | 分层记忆管理 | 分层存储(Core/Recall/Archival) | Agent平台 | L2活 | 手动 | 扁平块 | 中等 | API可查 | 隔离 | Apache 2.0 |
+| mem0 | LLM决策记忆 | 扁平向量+图 | SDK+MaaS | L1半活 | 手动 | 扁平/图 | ~90%☆ | API可查 | 跨Agent共享 | Apache 2.0 |
+| MemOS | 分层记忆管理 | 图+向量(MemCube) | Memory OS | L3活 | 调度器 | 图遍历 | 72%☆ | 可视化面板 | 隔离+共享 | Apache 2.0 |
+| EverMemOS | 分层记忆管理 | 超图+向量(EverCore) | Memory OS | L3活 | EverCore | 超图多跳 | 60-80%预估☆ | 超图可视化 | 共享+分区 | 待确认 |
+| claude-mem | 上下文基础设施 | SQLite+Chroma | 插件 | L1半活 | 无 | 扁平 | 智能压缩 | 人类可读 | 单Agent | AGPL-3.0 |
+| mem9 | LLM决策记忆 | TiDB向量+全文 | 插件(云) | L1半活 | 记忆调和 | 扁平 | 按需检索 | 日志 | 单Agent | Apache 2.0 |
+| lossless-claw | 外部记忆增强 | SQLite DAG | 插件 | L0死 | 无 | 时序DAG | 渐进披露 | 人类可读 | 单Agent | MIT |
+| memU | 外部记忆增强 | 文件目录树+pgvector | 插件+服务 | L2活 | 隐式淘汰 | 标签+符号链接 | 1/10成本☆ | 人类可读 | 多Agent协作 | Apache 2.0 |
+| xiaoclaw-memory | 程序性/技能记忆 | 纯Markdown | 插件 | L1半活 | 隐式淘汰 | 标签分类 | 零成本 | 人类可读 | 单Agent | MIT |
+| langmem | 上下文基础设施 | 可插入(内存/PG) | SDK | L1半活 | 手动 | 命名空间 | 按需检索 | LangGraph | 多Agent隔离 | MIT |
+| honcho | 多Agent共享记忆 | 向量+关系型(对等体) | MaaS | L3活 | 重要性 | 认知图谱 | 个性化路由 | Thought可追溯 | 多Agent共享 | AGPL-3.0 |
+| ContextLoom | 多Agent共享记忆 | Redis+时序 | 中间件 | L0死 | 无 | 无 | 无优化 | 日志 | 共享记忆 | 待确认 |
+| eion | 多Agent共享记忆 | PostgreSQL+Neo4j | MaaS | L0死 | 无 | 图遍历 | 无优化 | 图可视化 | 隔离+共享 | 待确认 |
+| mindforge | 分层记忆管理 | 向量+概念图 | Python库 | L2部分 | 无 | 概念图 | 多层分流 | 概念图可视化 | 单Agent | 待确认 |
+| Acontext | 程序性/技能记忆 | Markdown技能+向量 | 插件 | L2活 | 无 | 技能匹配 | 技能复用 | 技能审计 | 跨Agent共享 | Apache 2.0 |
+| ultraContext | 上下文基础设施 | 分布式结构化 | CaaS | L0死 | 无 | 无 | 智能压缩 | 版本控制 | 跨环境共享 | Apache 2.0 |
+| Voyager | 程序性/技能记忆 | JavaScript代码技能 | Agent框架 | L2活 | 无 | 技能检索 | 技能复用 | 代码可读 | 单Agent | MIT |
 | MemoryLLM | 模型原生 | 模型参数 | 模型底座 | 自监督 | 蒸馏 | 无 | 零检索开销 | 不可读 | 单模型 | 待确认 |
-| Acontext | 技能即记忆 | 技能结构化+向量 | 插件 | 技能进化 | 无 | 技能匹配 | 技能复用 | 技能审计 | 跨Agent共享 | 待确认 |
-| ultraContext | 上下文基础设施 | 分布式结构化 | CaaS | 上下文压缩 | 无 | 无 | 智能压缩 | 版本控制 | 跨环境共享 | 待确认 |
-| MemaryAI | 认知启发 | 向量+图+时序 | Python库 | 衰减+强化 | 衰减曲线 | 知识图谱 | 衰减淘汰 | 三层可视化 | 单Agent | 待确认 |
-| MindOS | OS+人机协同 | 状态机+文件 | MaaS | 共生演进 | 无 | 心智状态机 | 全局同步 | 心智审计 | 全局同步 | 待确认 |
 | Memorizing Trans. | 模型原生 | KV Cache | 模型修改 | 无 | 无 | kNN注意力 | kNN开销 | 不可读 | 单模型 | Google |
+| Infini-attention | 模型原生 | 压缩记忆+线性注意力 | 模型修改 | 无 | 无 | 压缩检索 | 恒定内存 | 不可读 | 单模型 | Google |
+| MemaryAI | 分层记忆管理 | 向量+图+时序 | Python库 | L2活 | 衰减曲线 | 知识图谱 | 衰减淘汰 | 三层可视化 | 单Agent | 待确认 |
+| MindOS | 分层记忆管理 | 状态机+文件 | MaaS | L3活 | 无 | 心智状态机 | 全局同步 | 心智审计 | 全局同步 | 待确认 |
+| MineContext | 外部记忆增强 | 文件树+向量 | 插件 | L1半活 | 无 | 目录浏览 | 主动预加载 | 目录浏览 | 单Agent | 待确认 |
+| Ori-Mnemos | 分层记忆管理 | 文件树+向量 | MaaS | L2活 | 重要性 | 层次结构 | 递归压缩 | 可视化 | 单Agent | 待确认 |
 
 > ☆ = 项目自报数据，无独立验证
+> 注：MemaryAI、MindOS、Ori-Mnemos系统源码未能通过公开搜索验证，分类基于原始报告描述
 
 ### B. 26篇核心学术论文索引
 
@@ -983,3 +1012,4 @@ L1 技能条目（蒸馏后）:
 6. **工程可行性注释**：对CortexMem的每个创新点增加工程可行性和安全风险注释
 7. **KPI现实性评估**：对预期效果进行现实性检验，区分"可实现"与"激进预期"
 8. **预测不确定性声明**：对未来3年预测增加置信度评级和前提条件说明
+9. **源码级分类验证**：通过并行子Agent对24个系统进行源码级深度调研，发现原"OS内存页置换"分类是营销隐喻而非技术实现，据此提出七大范式分类修正案
