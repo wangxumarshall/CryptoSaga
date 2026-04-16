@@ -1,0 +1,48 @@
+{
+  "cli_version": "v0.5.0-dev-5bc86155",
+  "checkpoint_id": "aadb4d22c3d0",
+  "session_id": "019d940e-b1c6-7973-b4c5-e965e4e7c11b",
+  "strategy": "manual-commit",
+  "created_at": "2026-04-16T02:29:26.522382Z",
+  "branch": "main",
+  "checkpoints_count": 0,
+  "files_touched": [],
+  "agent": "Codex",
+  "model": "gpt-5.4",
+  "turn_id": "251f617c2831",
+  "token_usage": {
+    "input_tokens": 1166790,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1028608,
+    "output_tokens": 37346,
+    "api_call_count": 35
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 555,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/agents/entire-search.md": 25,
+        ".claude/settings.json": 84,
+        ".codex/agents/entire-search.toml": 23,
+        ".codex/config.toml": 3,
+        ".codex/hooks.json": 40,
+        ".omc/project-memory.json": 110,
+        ".omc/sessions/68a5d729-b996-4fe9-9c2e-b637ab4dfac2.json": 8,
+        ".omc/sessions/e14af343-63fe-4d1c-848f-f0a90b333149.json": 8,
+        ".omc/state/hud-state.json": 6,
+        ".omc/state/hud-stdin-cache.json": 1,
+        ".opencode/plugins/entire.ts": 187,
+        "AgentOS-Memory/fs-vector-graph/findings.md": 19,
+        "AgentOS-Memory/fs-vector-graph/progress.md": 13,
+        "AgentOS-Memory/fs-vector-graph/task_plan.md": 28
+      }
+    }
+  ]
+}
