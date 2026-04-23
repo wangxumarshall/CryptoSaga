@@ -4,3 +4,6 @@
 .entire/
 .omc/
 .opencode/
+
+.gemini/
+gha-creds-*.json
