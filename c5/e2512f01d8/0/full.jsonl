@@ -1,0 +1,101 @@
+{
+  "info": {
+    "id": "ses_24612b0e9ffe1VaFqpjjYMS9nV",
+    "slug": "quick-canyon",
+    "projectID": "3063918415171cbbf7918369301e10e9bd1b2b78",
+    "directory": "/Users/wangxu/1-project/claude-books/AgentOS-Memory/fs-vector-graph",
+    "title": "New session - 2026-04-23T10:40:30.486Z",
+    "version": "1.4.6",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "time": {
+      "created": 1776940830486,
+      "updated": 1776940830642
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1776940830550
+        },
+        "agent": "​Sisyphus - Ultraworker",
+        "model": {
+          "providerID": "github-copilot",
+          "modelID": "claude-opus-4.6"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_db9ed4f1f001UzbiF5vtk3GL57",
+        "sessionID": "ses_24612b0e9ffe1VaFqpjjYMS9nV"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "opencode 打开后有 ​​​​Atlas - Plan Executor 、​​​​Atlas - Plan Executor 、​​Hephaestus - Deep Agent、​Sisyphus - Ultraworker 。这些是哪里来的，如何清除？",
+          "id": "prt_db9ed4f20001ODpivs5Y6vrXKn",
+          "sessionID": "ses_24612b0e9ffe1VaFqpjjYMS9nV",
+          "messageID": "msg_db9ed4f1f001UzbiF5vtk3GL57"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_db9ed4f1f001UzbiF5vtk3GL57",
+        "role": "assistant",
+        "mode": "​Sisyphus - Ultraworker",
+        "agent": "​Sisyphus - Ultraworker",
+        "path": {
+          "cwd": "/Users/wangxu/1-project/claude-books/AgentOS-Memory/fs-vector-graph",
+          "root": "/Users/wangxu/1-project/claude-books"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "modelID": "claude-opus-4.6",
+        "providerID": "github-copilot",
+        "time": {
+          "created": 1776940830562,
+          "completed": 1776940833497
+        },
+        "error": {
+          "name": "APIError",
+          "data": {
+            "message": "Bad Request: checking third-party user token: bad request: Personal Access Tokens are not supported for this endpoint",
+            "statusCode": 400,
+            "isRetryable": false,
+            "responseHeaders": {
+              "content-length": "105",
+              "content-security-policy": "default-src 'none'; sandbox",
+              "content-type": "text/plain; charset=utf-8",
+              "date": "Thu, 23 Apr 2026 10:40:31 GMT",
+              "strict-transport-security": "max-age=31536000",
+              "x-content-type-options": "nosniff",
+              "x-github-backend": "Kubernetes",
+              "x-github-request-id": "2634:1A1CEB:1429D7F:15E37B8:69E9F71F"
+            },
+            "responseBody": "checking third-party user token: bad request: Personal Access Tokens are not supported for this endpoint\n",
+            "metadata": {
+              "url": "https://api.githubcopilot.com/chat/completions"
+            }
+          }
+        },
+        "id": "msg_db9ed4f62001BBuWlElXvUMru8",
+        "sessionID": "ses_24612b0e9ffe1VaFqpjjYMS9nV"
+      },
+      "parts": []
+    }
+  ]
+}
